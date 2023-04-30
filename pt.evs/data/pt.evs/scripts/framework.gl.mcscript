@@ -1,0 +1,97 @@
+// Variables
+/scoreboard objectives add pato.health health;
+/scoreboard objectives modify pato.health displayname {"text": "de vida","color": "gold"};
+/scoreboard objectives setdisplay belowName pato.health;
+/scoreboard objectives setdisplay list pato.health;
+var patio.demo;
+var pato.demo;
+var pato.ticks;
+var pato.seconds;
+var pato.raidEv1Memb;
+var pato.rdEv1KillC
+var pato.raidLevel;
+var pato.RaidID;
+var pato.currntEvent;
+/scoreboard objectives add pato.KillCount playerKillCount {"text": "Contador de Kills","color": "red","bold": true};
+var pato.Craft;
+/scoreboard objectives add pato.rdEv1KillC dummy {"text": "Raid 1 Kill Counter","color": "red","bold": true};
+var pato.joins;
+/scoreboard objectives add pato.joinFuncFix custom:leave_game;
+var pato.Data;
+/scoreboard objectives add pato.jump custom:jump;
+var yBlaze.tickSummon;
+var register trigger;
+var login trigger;
+var pato.password;
+var pato.subtraction;
+var pato.equals;
+var dRav.tickSuper;
+var changepass trigger;
+
+// Modales
+modal ScoreReset(scoreboard,target){
+    /scoreboard players reset $(target) $(scoreboard);
+}
+modal DisplayTitle(target,type,json_text){
+    /title $(target) $(type) $(json_text);
+}
+modal RecipeRevoke(recipeName){
+    /advancement revoke @s only pt.evs:recipes/$(recipeName);
+    /recipe take @s pt.evs:$(recipeName);
+}
+modal ClearResult(item){
+    /execute store result score @s pato.Craft run clear @s $(item);
+}
+modal CraftSound(sound,target = "@s",location = "~ ~ ~"){
+    /playsound $(sound) master $(target) $(location);
+}
+modal store(args){
+    /execute store $(args);
+}
+modal AddEffect(target,effect,duration = "30",level = "0",hideParticles = "true"){
+    /effect give $(target) $(effect) $(duration) $(level) $(hideParticles);
+}
+modal ClearEffect(target,effect = ""){
+    /effect clear $(target) $(effect);
+}
+modal ReadInput(inputVar,outputVar,target){
+    /execute store result score $(target) $(outputVar) run scoreboard players operation $(target) $(outputVar) = $(target) $(inputVar);
+}
+modal ReadEquals(inputTarget,inputVar,selectedTarget,selectedVar){
+    /scoreboard players operation @s pato.subtraction = $(inputTarget) $(inputVar);
+    /execute store result score $(inputTarget) pato.equals run scoreboard players operation $(inputTarget) pato.subtraction -= $(selectedTarget) $(selectedVar);
+    /scoreboard players reset $(inputTarget) pato.subtraction;
+}
+modal EnableTrigger (target,triggerName) {
+    /scoreboard players enable $(target) $(triggerName);
+}
+modal AddEnchantment(enchantID,event = 'player_hurt_entity',slot = 'weapon.mainhand'){
+    ## Encantamiento: $(enchantID) | Condición: $(event).repl("default","player_hurt_entity") | Slot: $(slot)
+    /scoreboard objectives add $(enchantID).$(event) dummy;
+    /scoreboard objectives add ench.$(enchantID).maxLvl dummy;
+    /scoreboard objectives add ench.$(enchantID).lvl dummy;
+    asat(@a){
+        if('entity @s[advancements={pt.evs:ench/$(enchantID)/$(event).repl("default","player_hurt_entity")=true}]'){
+            /scoreboard players set @s $(enchantID).$(event) 1;
+        }
+    }
+    asat(@a[predicate=pt.evs:enchants/$(enchantID)]){
+        /execute store result score @s ench.$(enchantID).lvl run data get entity @s SelectedItem.tag.pato.Enchantments.[0].lvl;
+        if('entity @s[predicate=pt.evs:enchants/$(enchantID)_conds/$(event).repl("default","player_hurt_entity")]'){
+            /function pt.evs:enchants/$(enchantID);
+        }
+        /item modify entity @s $(slot) pt.evs:enchants/$(enchantID);
+    }
+}
+modal AddLoop(loopName,interval,loopRoot,command){
+    /scoreboard objectives add loop.$(loopName) dummy;
+    /function pt.evs:$(loopRoot)modalfiles/loop_$(loopName);
+    #file: ./modalfiles/loop_$(loopName)
+    /scoreboard players add loop.$(loopName) loop.$(loopName) 1;
+    if('score loop.$(loopName) loop.$(loopName) matches $(interval)..'){
+        asat(@a){
+            /$(command);
+        }
+        /scoreboard players reset loop.$(loopName) loop.$(loopName);
+    }
+}

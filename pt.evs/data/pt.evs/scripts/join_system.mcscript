@@ -1,0 +1,12 @@
+#file: ./join_function_fixer
+if(pato.joinFuncFix @s == 1){
+    /advancement revoke @s only pt.evs:player_join;
+    ScoreReset('pato.joinFuncFix','@s');
+}
+
+#file: ./player_join
+asat(@s){
+    /tag @s add pato.onLoginResponse;
+    /summon armor_stand ~ ~ ~ {Tags:["pato.previousLocation"],Invisible:1b,Invulnerable:1b,Silent:1b,NoGravity:1b};
+    /function pt.evs:login/checker_message;
+}

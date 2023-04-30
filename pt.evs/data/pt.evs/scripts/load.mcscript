@@ -1,3 +1,16 @@
 #file: ./load
+# Carga
+/function pt.evs:framework
+# Bossbars
+# Por ahora, NO
 
-// here goes your load content
+# Gamerules
+/gamerule playersSleepingPercentage 1;
+/gamerule commandBlockOutput false;
+# MODO DEMO
+pato.demo .Demo = 1;
+pato.demo @a = 1;
+# Eventos
+#por el evento de este domingo, estará desactivado por poco tiempo (solo es eso)
+#scoreboard players set .Event pato.currntEvent 1
+pato.currntEvent .Event = 2;
